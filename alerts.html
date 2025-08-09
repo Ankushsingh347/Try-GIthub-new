@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Suraksha 360° - Live Alerts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-yellow-50 text-gray-800 font-sans">
+
+  <header class="bg-red-600 text-white p-6 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Suraksha 360° - Live Alerts</h1>
+      <nav>
+        <a href="index.html" class="mx-3 hover:underline">Home</a>
+        <a href="alerts.html" class="mx-3 hover:underline">Live Alerts</a>
+        <a href="map.html" class="mx-3 hover:underline">Map</a>
+        <a href="contact.html" class="mx-3 hover:underline">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="py-12 text-center">
+    <h2 class="text-4xl font-bold mb-4 text-red-700">🛑 Live Disaster Alerts</h2>
+    <p class="text-lg text-gray-600 mb-6">Real-time disaster updates and alerts from your location.</p>
+
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+      <h3 class="text-2xl font-semibold mb-4 text-red-600">Current Situation in Gangtok</h3>
+      <ul id="alertsList" class="space-y-3 text-left">
+        <li>Loading latest alerts...</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="bg-red-600 text-white text-center py-4 mt-6">
+    &copy; 2025 Suraksha 360°. All rights reserved.
+  </footer>
+
+  <script>
+    async function fetchAlerts() {
+      const apiKey = 'f0208dd7967b46f4a8f110021251404'; 
+      const location = 'Gangtok';
+      const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const alertsList = document.getElementById('alertsList');
+        alertsList.innerHTML = `
+          <li><strong>🌡️ Temperature:</strong> ${data.current.temp_c}°C</li>
+          <li><strong>💨 Wind Speed:</strong> ${data.current.wind_kph} kph</li>
+          <li><strong>☁️ Cloud Cover:</strong> ${data.current.cloud}%</li>
+          <li><strong>🌦️ Condition:</strong> ${data.current.condition.text}</li>
+          <li><strong>⏰ Last Updated:</strong> ${data.current.last_updated}</li>
+        `;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('alertsList').innerHTML = `<li>❌ Failed to fetch alerts. Please try again later.</li>`;
+      }
+    }
+
+    // Initial fetch
+    fetchAlerts();
+
+    // Auto refresh every 5 seconds
+    setInterval(fetchAlerts, 5000);
+  </script>
+
+</body>
+</html>
